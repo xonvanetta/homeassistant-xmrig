@@ -43,10 +43,10 @@ async def async_setup_entry(
     controller = SummaryController(hass, config_entry)
     await controller.async_initialize()
     hass.data[DOMAIN][DATA_CONTROLLER][config_entry.entry_id] = controller
-    
+
     # Replace the deprecated call with the new method
-    await hass.config_entries.async_forward_entry_setups(config_entry, ["sensor"])
-    
+    await hass.config_entries.async_forward_entry_setups(config_entry, ["sensor", "switch"])
+
     return True
 
 
@@ -62,6 +62,9 @@ async def async_unload_entry(
     controller: SummaryController = hass.data[DOMAIN][DATA_CONTROLLER][
         config_entry.entry_id
     ]
-    await hass.config_entries.async_forward_entry_unload(config_entry, "sensor")
-    await controller.async_reset()
-    return True
+    unload_ok = await hass.config_entries.async_unload_platforms(
+        config_entry, ["sensor", "switch"]
+    )
+    if unload_ok:
+        await controller.async_reset()
+    return unload_ok

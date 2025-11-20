@@ -161,10 +161,7 @@ class XmrigSensor(SensorEntity):
         self._instanceName = instanceName
         self._sensorName = sensorName
         self._controller = controller
-        self._name = "{} {}".format(
-            self._instanceName,
-            DefaultTo(sensorDefinition.get(SETUP_NAME), self._sensorName),
-        )
+        self._name = DefaultTo(sensorDefinition.get(SETUP_NAME), self._sensorName)
         self._icon = sensorDefinition.get(SETUP_ICON)
         self._unit = sensorDefinition.get(SETUP_UNIT)
         self._sensorDefinition = sensorDefinition
@@ -220,7 +217,7 @@ class XmrigSensor(SensorEntity):
     def device_info(self) -> Dict[str, Any]:
         """Return a description for device registry."""
         info = {
-            "name": self._instanceName + " xmrig",
+            "name": self._instanceName,
             "identifiers": {
                 (
                     DOMAIN,
